@@ -1,14 +1,23 @@
 class TweetParser():
-    def __init__(self, raw_tweet_json):
+    def __init__(self, raw_tweet_json, quote):
         self.is_valid_tweet = True
         self.raw_tweet_json = raw_tweet_json
         self._media_urls = None
+        self.quote = quote
 
-        if not raw_tweet_json["content"].get("itemContent", None):
-            self.is_valid_tweet = False
-            return
+        if not quote:
+            if not raw_tweet_json["content"].get("itemContent", None):
+                self.is_valid_tweet = False
+                return
 
-        self.key_data = raw_tweet_json["content"]["itemContent"]["tweet_results"]["result"]
+            self.key_data = raw_tweet_json["content"]["itemContent"]["tweet_results"]["result"]
+        else:
+            if not raw_tweet_json.get("result", None):
+                self.is_valid_tweet = False
+                return
+
+            self.key_data = raw_tweet_json["result"]
+
         if not self.key_data.get("legacy", None):
             self.is_valid_tweet = False
 
@@ -26,6 +35,7 @@ class TweetParser():
             "tweet_quote_count": self.tweet_quote_count,
             "tweet_reply_count": self.tweet_reply_count,
             "tweet_retweet_count": self.tweet_retweet_count,
+            "quote": self.quote_tweet_origin
         }
 
     @property
@@ -56,10 +66,13 @@ class TweetParser():
     def tweet_retweet_count(self):
         return self.key_data["legacy"]["retweet_count"]
 
-
     @property
     def user_id(self):
         return self.key_data["legacy"]["user_id_str"]
+
+    @property
+    def is_quote(self):
+        return self.key_data["legacy"]["is_quote_status"]
 
     @property
     def user_handle(self):
@@ -76,6 +89,16 @@ class TweetParser():
     @property
     def user_data(self):
         return self.key_data["core"]["user_results"]["result"]["legacy"]
+
+    @property
+    def quote_tweet_origin(self):
+        if not self.is_quote or self.quote:
+            return None
+        # print(self.tweet_content)
+        tweet_parser = TweetParser(self.key_data["quoted_status_result"], True)
+        if tweet_parser.is_valid_tweet:
+            return tweet_parser.tweet_as_json()
+        return None
 
     @property
     def media_urls(self):
