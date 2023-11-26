@@ -23,13 +23,18 @@ class TweetDownloader():
         old_page_cursor = None
         current_page = 1
 
+        i=0
         while likes_page and page_cursor and page_cursor != old_page_cursor:
             print(f"Fetching likes page: {current_page}...")
             current_page += 1
             for raw_tweet in likes_page:
-                tweet_parser = TweetParser(raw_tweet)
-                if tweet_parser.is_valid_tweet:
-                    all_tweets.append(tweet_parser.tweet_as_json())
+                try:
+                    tweet_parser = TweetParser(raw_tweet)
+                    if tweet_parser.is_valid_tweet:
+                        all_tweets.append(tweet_parser.tweet_as_json())
+                except Exception as err:
+                    print("Error parsing tweet")
+            
             old_page_cursor = page_cursor
             likes_page = self.retrieve_likes_page(cursor=page_cursor)
             page_cursor = self.get_cursor(likes_page)

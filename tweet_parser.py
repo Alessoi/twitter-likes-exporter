@@ -21,7 +21,11 @@ class TweetParser():
             "user_avatar_url": self.user_avatar_url,
             "tweet_content": self.tweet_content,
             "tweet_media_urls": self.media_urls,
-            "tweet_created_at": self.tweet_created_at
+            "tweet_created_at": self.tweet_created_at,
+            "tweet_like_count": self.tweet_like_count,
+            "tweet_quote_count": self.tweet_quote_count,
+            "tweet_reply_count": self.tweet_reply_count,
+            "tweet_retweet_count": self.tweet_retweet_count,
         }
 
     @property
@@ -35,6 +39,23 @@ class TweetParser():
     @property
     def tweet_created_at(self):
         return self.key_data["legacy"]["created_at"]
+
+    @property
+    def tweet_like_count(self):
+        return self.key_data["legacy"]["favorite_count"]
+
+    @property
+    def tweet_quote_count(self):
+        return self.key_data["legacy"]["quote_count"]
+    
+    @property
+    def tweet_reply_count(self):
+        return self.key_data["legacy"]["reply_count"]
+    
+    @property
+    def tweet_retweet_count(self):
+        return self.key_data["legacy"]["retweet_count"]
+
 
     @property
     def user_id(self):
