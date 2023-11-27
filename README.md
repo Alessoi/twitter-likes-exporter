@@ -1,10 +1,10 @@
-# Twitter Likes Exporter
+# Twitter Likes Exporter (supports quote tweets)
 
-Hacky Python scripts for downloading your Twitter likes and converting to HTML. Includes support for downloading user avatars and image media in tweets. Scrapes tweets using the GraphQL API powering Twitter.com - the equivalent of you scrolling through all your likes in your web browser, only saved locally forever!
+Hacky Python scripts for downloading your Twitter likes and converting to HTML. Includes support for downloading user avatars, image media and the reactions number in tweets. Scrapes tweets using the GraphQL API powering Twitter.com - the equivalent of you scrolling through all your likes in your web browser, only saved locally forever!
 
 ![example output rendered html of tweets](example_html_output.png)
 
-Note only currently supports grabbing the liked tweet. So if it was a quote tweet, does not download the RT'd tweet. If it's a reply or part of a thread, does not download the other tweets.
+Note only currently supports grabbing the liked tweet (and the quoted tweet if it is a quote). So if it's a reply or part of a thread it does not download the other tweets.
 
 Meant to jumpstart you to at least getting your tweets offline from Twitter, if not building something much better!
 
@@ -61,6 +61,11 @@ The output JSON will be a list of dictionaries like the following:
       "tweet_content":"What are you hiding in your locked instagram? sandwiches? Sunsets???? let us see your nephew!!!!",
       "tweet_media_urls": [],
       "tweet_created_at": "Sun Mar 13 15:16:45 +0000 2011"
+      "tweet_like_count": 1200,
+      "tweet_quote_count": 21,
+      "tweet_reply_count": 5,
+      "tweet_retweet_count": 65,
+      "quote": null
    }
 ]
 ```
