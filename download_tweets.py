@@ -14,6 +14,7 @@ class TweetDownloader():
             self.header_cookie = config_data.get('HEADER_COOKIES')
             self.header_csrf = config_data.get('HEADER_CSRF')
             self.output_json_file_path = config_data.get('OUTPUT_JSON_FILE_PATH')
+            self.from_scratch = config_data.get('FROM_SCRATCH')
 
     def retrieve_all_likes(self):
         all_tweets = []
@@ -22,25 +23,40 @@ class TweetDownloader():
         page_cursor = self.get_cursor(likes_page)
         old_page_cursor = None
         current_page = 1
+        done = False
 
-        if True:
-        # while likes_page and page_cursor and page_cursor != old_page_cursor:
+        last_saved_tweet = None
+        if not self.from_scratch:
+            all_tweets = self.tweets_as_json()
+            last_saved_tweet = all_tweets[-1]
+
+        # if True:
+        while likes_page and page_cursor and page_cursor != old_page_cursor:
             print(f"Fetching likes page: {current_page}...")
             current_page += 1
             for raw_tweet in likes_page:
                 try:
                     tweet_parser = TweetParser(raw_tweet, False)
                     if tweet_parser.is_valid_tweet:
-                        all_tweets.append(tweet_parser.tweet_as_json())
-                        
+                        tweet_json = tweet_parser.tweet_as_json()
+                        if self.from_scratch:
+                            all_tweets.append(tweet_json)
+                        elif tweet_json["tweet_id"] != last_saved_tweet["tweet_id"]:
+                            all_tweets.append(tweet_json)
+                        else:
+                            done = True
+                            break                        
                 except Exception as err:
                     print("Error parsing tweet")
             
+            if done:
+                break
+
             old_page_cursor = page_cursor
             likes_page = self.retrieve_likes_page(cursor=page_cursor)
             page_cursor = self.get_cursor(likes_page)
 
-        with open(self.output_json_file_path, 'w') as f:
+        with open(self.output_json_file_path, "w") as f:
             f.write(json.dumps(all_tweets))
 
     def retrieve_likes_page(self, cursor=None):
@@ -116,6 +132,13 @@ class TweetDownloader():
             "responsive_web_text_conversations_enabled": False,
             "responsive_web_enhance_cards_enabled": False
         }
+    
+    def tweets_as_json(self):
+        with open(self.output_json_file_path, 'rb') as json_file:
+            lines = json_file.readlines()
+            tweets_as_json = json.loads(lines[0])
+
+        return tweets_as_json
 
 if __name__ == '__main__':
     downloader = TweetDownloader()
