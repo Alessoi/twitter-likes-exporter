@@ -58,6 +58,7 @@ The output JSON will be a list of dictionaries like the following:
       "user_handle": "LeahTiscione",
       "user_name": "Leah Tiscione",
       "user_avatar_url": "https://pbs.twimg.com/profile_images/1563330281838284805/aUtIY2vj_normal.jpg",
+      "user_description": "My description (-:",
       "tweet_content":"What are you hiding in your locked instagram? sandwiches? Sunsets???? let us see your nephew!!!!",
       "tweet_media_urls": [],
       "tweet_created_at": "Sun Mar 13 15:16:45 +0000 2011"
