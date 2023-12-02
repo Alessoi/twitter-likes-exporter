@@ -50,6 +50,10 @@ body {
      font-size:0.9em;
      width:100%;
 }
+ .tweet_author_description {
+    font-size:0.9em;
+    width:100%;
+}
  .tweet_content {
      width:100%;
      margin-top:15px;

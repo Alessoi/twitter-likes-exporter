@@ -28,6 +28,7 @@ class TweetParser():
             "user_handle": self.user_handle,
             "user_name": self.user_name,
             "user_avatar_url": self.user_avatar_url,
+            "user_description": self.user_description,
             "tweet_content": self.tweet_content,
             "tweet_media_urls": self.media_urls,
             "tweet_created_at": self.tweet_created_at,
@@ -81,6 +82,10 @@ class TweetParser():
     @property
     def user_name(self):
         return self.user_data["name"]
+
+    @property
+    def user_description(self):
+        return self.user_data["description"]
 
     @property
     def user_avatar_url(self):
